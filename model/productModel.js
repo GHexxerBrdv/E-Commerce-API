@@ -19,12 +19,11 @@ const productModel = new mongoose.Schema({
     category: {
         type: String,
         required: true,
-        lowecase: true,
         enum: ["electronics", "clothing", "books", "accessories", "food", "furniture", "others"]
     },
     brand: {
         type: String,
-        requried: true
+        default: "Generic"
     },
     stock: {
         type: Number,
