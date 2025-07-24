@@ -67,6 +67,16 @@ const getProductById = asyncHandler(async(req, res) => {
     res.status(200).json(product);
 });
 
+const addProductReview = asyncHandler(async(req, res) => {
+    const {name, rating, comment} = req.body;
+
+    if(!name || !rating || !comment) {
+        res.status(400);
+        throw new Error("All fields required to rate the product.");
+    }
+
+});
+
 module.exports = {
     addProduct,
     getProducts,
