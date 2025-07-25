@@ -68,12 +68,37 @@ const getProductById = asyncHandler(async(req, res) => {
 });
 
 const addProductReview = asyncHandler(async(req, res) => {
-    const {name, rating, comment} = req.body;
+    const {rating, comment} = req.body;
 
-    if(!name || !rating || !comment) {
-        res.status(400);
-        throw new Error("All fields required to rate the product.");
+    const product = await Products.findById(req.params.id);
+
+    if(!product) {
+        res.status(404);
+        throw new Error("Product not found");
     }
+
+    const alreadyReviewed = product.reviews.find(
+        (r) => r.user.toString() === req.user._id.toString()
+    );
+
+    if(alreadyReviewed) {
+        res.status(400);
+        throw new Error("Product is already reviewed");
+    }
+
+    const review = {
+        user: req.user._id,
+        name: req.user.username,
+        rating: Number(rating),
+        comment
+    };
+
+    product.reviews.push(review);
+    product.numReviews = product.reviews.length;
+    product.rating = product.reviews.reduce((acc, item) => item.rating + acc, 0) / product.reviews.length;
+
+    await product.save()
+    res.status(201).json({ message: "Review added successfully" });
 
 });
 
@@ -82,5 +107,6 @@ module.exports = {
     getProducts,
     getProductById,
     updateProduct,
-    removeProduct
+    removeProduct,
+    addProductReview
 }
