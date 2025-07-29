@@ -1,5 +1,6 @@
 const asyncHandler = require("express-async-handler");
 const Order = require("../model/orderModel");
+const sendEmail = require("../utils/sendEmail");
 
 const createOrder = asyncHandler(async (req, res) => {
     const {
@@ -23,6 +24,14 @@ const createOrder = asyncHandler(async (req, res) => {
     })
 
     const createOrder = await order.save();
+
+    await sendEmail(
+        req.user.email,
+        "🛒 Order Confirmation - Shop API",
+        `<h1>Thank you for your order, ${req.user.username}!</h1>
+        <p>Your order ID is: <strong>${order._id}</strong></p>
+        <p>We'll notify you once it's shipped.</p>`
+    )
 
     res.status(200).json(createOrder);
 });
