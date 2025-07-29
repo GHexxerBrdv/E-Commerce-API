@@ -1,4 +1,4 @@
-const {asyncHandler} = require("express-async-handler");
+const asyncHandler = require("express-async-handler");
 const Order = require("../model/orderModel");
 
 const createOrder = asyncHandler(async (req, res) => {
@@ -33,7 +33,7 @@ const getMyOrders = asyncHandler(async(req, res) => {
     res.status(400).json(orders);
 });
 
-const getOrerById = asyncHandler(async(req, res) => {
+const getOrderById = asyncHandler(async(req, res) => {
     const order = await Order.findById(req.params.id).populate("user", "username email");
     
     if(!order) {
@@ -90,6 +90,7 @@ const markOrderAsPAid = asyncHandler(async (req, res) => {
 module.exports = {
     createOrder, 
     getMyOrders,
-    getOrerById,
-    getAllOrders
+    getOrderById,
+    getAllOrders,
+    markOrderAsPAid
 }

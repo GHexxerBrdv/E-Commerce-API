@@ -3,6 +3,7 @@ const cookieParser = require("cookie-parser");
 const connectDB = require("./config/db");
 const userRouter = require("./routes/userRoute");
 const productRouter = require("./routes/productRoute");
+const orderRouter = require("./routes/orderRoutes");
 require("dotenv").config();
 
 const app = express();
@@ -13,6 +14,7 @@ app.use(express.json());
 app.use(cookieParser());
 app.use("/api/auth", userRouter);
 app.use("/api/products", productRouter);
+app.use("/api/orders", orderRouter);
 
 connectDB();
 
