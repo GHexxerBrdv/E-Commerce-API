@@ -4,6 +4,7 @@ const connectDB = require("./config/db");
 const userRouter = require("./routes/userRoute");
 const productRouter = require("./routes/productRoute");
 const orderRouter = require("./routes/orderRoutes");
+const adminRouter = require("./routes/adminRoutes");
 require("dotenv").config();
 
 const app = express();
@@ -15,6 +16,8 @@ app.use(cookieParser());
 app.use("/api/auth", userRouter);
 app.use("/api/products", productRouter);
 app.use("/api/orders", orderRouter);
+app.use("/api/admin", adminRouter);
+
 
 connectDB();
 
