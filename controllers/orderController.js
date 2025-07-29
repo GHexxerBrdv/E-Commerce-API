@@ -49,8 +49,47 @@ const getOrerById = asyncHandler(async(req, res) => {
     res.status(200).json(order);
 });
 
+const getAllOrders = asyncHandler(async (req, res) => {
+
+    if(req.user.role !== "admin") {
+        res.status(403);
+        throw new Error("Not authorized to see orders");
+    }
+    const orders = await Order.find().populate("user", "username email");
+
+    res.status(200).json(orders);
+})
+
+const markOrderAsPAid = asyncHandler(async (req, res) => {
+
+    const {id} = req.params.id;
+
+    const order = await Order.findById(id);
+
+    if(!order) {
+        res.status(404);
+        throw new Error("Order not found");
+    }
+
+    const isPaid = order.isPaid;
+
+    if(isPaid) {
+        res.status(201);
+        throw new Error("the order is already paid");
+    }
+
+    order.isPaid = true;
+    order.paidAt = Date.now();
+
+    const updatedOrder = await order.save();
+
+    res.status(200).json(updatedOrder);
+
+})
+
 module.exports = {
     createOrder, 
     getMyOrders,
-    getOrerById
+    getOrerById,
+    getAllOrders
 }
